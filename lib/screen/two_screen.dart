@@ -11,14 +11,37 @@ class TwoScreen extends StatefulWidget {
 
 class _TwoScreenState extends State<TwoScreen> {
   int seconds = 0, minutes = 0, hours = 0;
-  String digitSecond = '00', digitMinut = '00', digitHours = '00';
+  String digitSeconds = '00', digitMinutes = '00', digitHours = '00';
   Timer? timer;
   bool started = false;
+  List laps = [];
 
   void stop() {
     timer!.cancel();
     setState(() {
       started = false;
+    });
+  }
+
+  void reset() {
+    timer!.cancel();
+    setState(() {
+      seconds = 0;
+      minutes = 0;
+      hours = 0;
+
+      digitHours = '00';
+      digitMinutes = '00';
+      digitSeconds = '00';
+
+      started = false;
+    });
+  }
+
+  void addLaps() {
+    String lap = "$digitHours:$digitMinutes:$digitSeconds";
+    setState(() {
+      laps.add(lap);
     });
   }
 
@@ -43,8 +66,8 @@ class _TwoScreenState extends State<TwoScreen> {
         seconds = localSeconds;
         minutes = localMinutes;
         hours = localHours;
-        digitSecond = (seconds >= 10) ? "$seconds" : "0$seconds";
-        digitMinut = (minutes >= 10) ? "$minutes" : "0$minutes";
+        digitSeconds = (seconds >= 10) ? "$seconds" : "0$seconds";
+        digitMinutes = (minutes >= 10) ? "$minutes" : "0$minutes";
         digitHours = (hours >= 10) ? "$hours" : "0$hours";
       });
     });
@@ -59,12 +82,42 @@ class _TwoScreenState extends State<TwoScreen> {
         children: [
           Center(
             child: Text(
-              '$digitHours:$digitMinut:$digitSecond',
+              '$digitHours:$digitMinutes:$digitSeconds',
               style: const TextStyle(
-                color: Colors.white,
+                color: Color.fromARGB(255, 3, 80, 15),
                 fontSize: 82.0,
                 fontWeight: FontWeight.w600,
               ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(left: 20, right: 20),
+            child: Container(
+              height: 300,
+              decoration: BoxDecoration(
+                color: const Color.fromARGB(255, 7, 8, 63),
+                borderRadius: BorderRadius.circular(20),
+              ),
+              child: ListView.builder(
+                  itemCount: laps.length,
+                  itemBuilder: (context, index) {
+                    return Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            'Lavel n^ ${index + 1}',
+                            style: const TextStyle(fontSize: 16, color: Colors.white),
+                          ),
+                          Text(
+                            '${laps[index]}',
+                            style: const TextStyle(fontSize: 16, color: Colors.white),
+                          ),
+                        ],
+                      ),
+                    );
+                  }),
             ),
           ),
           const SizedBox(height: 30),
@@ -75,7 +128,7 @@ class _TwoScreenState extends State<TwoScreen> {
                   onPressed: () {
                     start();
                   },
-                  style: const ButtonStyle(minimumSize: MaterialStatePropertyAll(Size(220, 70)), shape: MaterialStatePropertyAll(RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(15)))), backgroundColor: MaterialStatePropertyAll(Color.fromARGB(255, 86, 6, 133))),
+                  style: const ButtonStyle(minimumSize: MaterialStatePropertyAll(Size(150, 70)), shape: MaterialStatePropertyAll(RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(15)))), backgroundColor: MaterialStatePropertyAll(Color.fromARGB(255, 86, 6, 133))),
                   child: const Text(
                     'Start',
                     style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700, color: Color.fromARGB(255, 16, 194, 191)),
@@ -84,8 +137,10 @@ class _TwoScreenState extends State<TwoScreen> {
               ElevatedButton(
                   onPressed: () {
                     stop();
+                    addLaps();
+                    reset();
                   },
-                  style: const ButtonStyle(minimumSize: MaterialStatePropertyAll(Size(220, 70)), shape: MaterialStatePropertyAll(RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(15)))), backgroundColor: MaterialStatePropertyAll(Color.fromARGB(255, 86, 6, 133))),
+                  style: const ButtonStyle(minimumSize: MaterialStatePropertyAll(Size(150, 70)), shape: MaterialStatePropertyAll(RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(15)))), backgroundColor: MaterialStatePropertyAll(Color.fromARGB(255, 86, 6, 133))),
                   child: const Text(
                     'Stop',
                     style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700, color: Color.fromARGB(255, 16, 194, 191)),
