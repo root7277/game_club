@@ -15,6 +15,7 @@ class _TwoScreenState extends State<TwoScreen> {
   Timer? timer;
   bool started = false;
   List laps = [];
+  int sum = 0;
 
   void stop() {
     timer!.cancel();
@@ -80,6 +81,27 @@ class _TwoScreenState extends State<TwoScreen> {
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Container(
+                width: 50,
+                height: 50,
+                margin: const EdgeInsets.only(left: 20),
+                padding: const EdgeInsets.only(left: 8),
+                decoration: BoxDecoration(
+                  color: const Color.fromARGB(255, 27, 117, 15),
+                  borderRadius: BorderRadius.circular(50),
+                ),
+                child: IconButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    icon: const Icon(Icons.arrow_back_ios)),
+              )
+            ],
+          ),
+          const SizedBox(height: 10),
           Center(
             child: Text(
               '$digitHours:$digitMinutes:$digitSeconds',
